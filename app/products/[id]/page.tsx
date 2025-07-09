@@ -12,7 +12,7 @@ type Props = {
   params: { id: string };
 };
 
-const ProductDetails = async ({ params }: { params: { id: string } }) => {
+const ProductDetails = async ({ params }: Props): Promise<JSX.Element> => {
   const { id } = params;
   const product: Product = await getProductById(id);
   if (!product) redirect("/");
@@ -54,12 +54,10 @@ const ProductDetails = async ({ params }: { params: { id: string } }) => {
                   width={20}
                   height={20}
                 />
-
                 <p className="text-base font-semibold text-[#D46F77] ">
                   {product.reviewsCount}
                 </p>
               </div>
-
               <div className="p-2 bg-white-200 rounded-10">
                 <Image
                   src="/assets/icons/bookmark.svg"
@@ -78,6 +76,7 @@ const ProductDetails = async ({ params }: { params: { id: string } }) => {
               </div>
             </div>
           </div>
+
           <div className="product-info">
             <div className="flex flex-col gap-2">
               <p className="text-[34px] text-secondary font-bold">
@@ -101,7 +100,6 @@ const ProductDetails = async ({ params }: { params: { id: string } }) => {
                     {product.stars || "25"}
                   </p>
                 </div>
-
                 <div className="product-reviews">
                   <Image
                     src="/assets/icons/comment.svg"
@@ -121,33 +119,32 @@ const ProductDetails = async ({ params }: { params: { id: string } }) => {
               </p>
             </div>
           </div>
+
           <div className="my-7 flex flex-col gap-5">
             <div className="flex gap-5 flex-wrap">
               <PriceInfoCard
                 title="Current Price"
                 iconSrc="/assets/icons/price-tag.svg"
                 value={`${product.currency} ${formatNumber(product.currentPrice)}`}
-                borderColor={""}
+                borderColor=""
               />
               <PriceInfoCard
                 title="Average Price"
                 iconSrc="/assets/icons/chart.svg"
                 value={`${product.currency} ${formatNumber(product.averagePrice)}`}
-                borderColor={""}
+                borderColor=""
               />
               <PriceInfoCard
                 title="Highest Price"
                 iconSrc="/assets/icons/arrow-up.svg"
                 value={`${product.currency} ${formatNumber(product.highestPrice)}`}
-                borderColor={""}
+                borderColor=""
               />
               <PriceInfoCard
                 title="Lowest Price"
                 iconSrc="/assets/icons/arrow-down.svg"
-                value={`${product.currency} ${formatNumber(
-                  product.lowestPrice
-                )}`}
-                borderColor={""}
+                value={`${product.currency} ${formatNumber(product.lowestPrice)}`}
+                borderColor=""
               />
             </div>
           </div>
@@ -161,33 +158,31 @@ const ProductDetails = async ({ params }: { params: { id: string } }) => {
           <h3 className="text-2xl text-secondary font-semibold">
             Product Description
           </h3>
-
           <div className="flex flex-col gap-4">
-            {product?.description?.split("\n")}
+            {product?.description?.split("\n").map((line, i) => (
+              <p key={i} className="text-base text-black opacity-70">
+                {line}
+              </p>
+            ))}
           </div>
         </div>
 
-        <button
-          className="btn w-fit max-auto flex items-center
-        justify-center gap-3 min-w-[200px]"
-        >
+        <button className="btn w-fit max-auto flex items-center justify-center gap-3 min-w-[200px]">
           <Image
             src="/assets/icons/bag.svg"
             alt="check"
             width={22}
             height={22}
           />
-
           <Link href="/" className="text-base text-white">
             Buy Now
           </Link>
         </button>
       </div>
 
-      {similarProducts && similarProducts?.length > 0 && (
+      {similarProducts && similarProducts.length > 0 && (
         <div className="py-14 flex flex-col gap-2 w-full">
           <p className="section-text">Similar Products</p>
-
           <div className="flex flex-wrap gap-10 mt-7 w-full">
             {similarProducts.map((product) => (
               <ProductCard key={product._id} product={product} />
