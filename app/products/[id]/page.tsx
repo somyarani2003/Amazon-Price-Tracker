@@ -8,19 +8,22 @@ import ProductCard from "@/components/ProductCard";
 import PriceInfoCard from "@/components/PriceInfoCard";
 import Modal from "@/components/Modal";
 
-type Props = {
+interface ProductDetailsPageProps {
   params: { id: string };
-};
+}
 
-const ProductDetails = async ({ params }: Props): Promise<JSX.Element> => {
+const ProductDetails = async ({ params }: ProductDetailsPageProps) => {
   const { id } = params;
   const product: Product = await getProductById(id);
+
   if (!product) redirect("/");
 
   const similarProducts = await getSimilarProducts(id);
+
   return (
     <div className="product-container">
       <div className="flex gap-28 xl:flex-row flex-col">
+        {/* Product Image */}
         <div className="product-image">
           <Image
             src={product.image || "/assets/images/placeholder.png"}
@@ -31,6 +34,7 @@ const ProductDetails = async ({ params }: Props): Promise<JSX.Element> => {
           />
         </div>
 
+        {/* Product Details */}
         <div className="flex-1 flex flex-col">
           <div className="flex justify-between items-start gap-5 flex-wrap pb-6">
             <div className="flex flex-col gap-3">
@@ -54,7 +58,7 @@ const ProductDetails = async ({ params }: Props): Promise<JSX.Element> => {
                   width={20}
                   height={20}
                 />
-                <p className="text-base font-semibold text-[#D46F77] ">
+                <p className="text-base font-semibold text-[#D46F77]">
                   {product.reviewsCount}
                 </p>
               </div>
@@ -77,6 +81,7 @@ const ProductDetails = async ({ params }: Props): Promise<JSX.Element> => {
             </div>
           </div>
 
+          {/* Price Info */}
           <div className="product-info">
             <div className="flex flex-col gap-2">
               <p className="text-[34px] text-secondary font-bold">
@@ -100,6 +105,7 @@ const ProductDetails = async ({ params }: Props): Promise<JSX.Element> => {
                     {product.stars || "25"}
                   </p>
                 </div>
+
                 <div className="product-reviews">
                   <Image
                     src="/assets/icons/comment.svg"
@@ -115,11 +121,12 @@ const ProductDetails = async ({ params }: Props): Promise<JSX.Element> => {
 
               <p className="text-sm text-black opacity-50">
                 <span className="text-primary-green font-semibold">93%</span> of
-                buyers have recommeded this.
+                buyers have recommended this.
               </p>
             </div>
           </div>
 
+          {/* Price Stats */}
           <div className="my-7 flex flex-col gap-5">
             <div className="flex gap-5 flex-wrap">
               <PriceInfoCard
@@ -153,17 +160,14 @@ const ProductDetails = async ({ params }: Props): Promise<JSX.Element> => {
         </div>
       </div>
 
-      <div className="flex flex-col gap-16 ">
+      {/* Description */}
+      <div className="flex flex-col gap-16">
         <div className="flex flex-col gap-5">
           <h3 className="text-2xl text-secondary font-semibold">
             Product Description
           </h3>
-          <div className="flex flex-col gap-4">
-            {product?.description?.split("\n").map((line, i) => (
-              <p key={i} className="text-base text-black opacity-70">
-                {line}
-              </p>
-            ))}
+          <div className="flex flex-col gap-4 whitespace-pre-line">
+            {product?.description}
           </div>
         </div>
 
@@ -180,6 +184,7 @@ const ProductDetails = async ({ params }: Props): Promise<JSX.Element> => {
         </button>
       </div>
 
+      {/* Similar Products */}
       {similarProducts && similarProducts.length > 0 && (
         <div className="py-14 flex flex-col gap-2 w-full">
           <p className="section-text">Similar Products</p>
