@@ -8,22 +8,22 @@ import ProductCard from "@/components/ProductCard";
 import PriceInfoCard from "@/components/PriceInfoCard";
 import Modal from "@/components/Modal";
 
-interface ProductDetailsPageProps {
-  params: { id: string };
-}
+type Props = {
+  params: {
+    id: string;
+  };
+};
 
-const ProductDetails = async ({ params }: ProductDetailsPageProps) => {
-  const { id } = params;
-  const product: Product = await getProductById(id);
+export default async function ProductDetails({ params }: Props) {
+  const product: Product = await getProductById(params.id);
 
   if (!product) redirect("/");
 
-  const similarProducts = await getSimilarProducts(id);
+  const similarProducts = await getSimilarProducts(params.id);
 
   return (
     <div className="product-container">
       <div className="flex gap-28 xl:flex-row flex-col">
-        {/* Product Image */}
         <div className="product-image">
           <Image
             src={product.image || "/assets/images/placeholder.png"}
@@ -34,7 +34,6 @@ const ProductDetails = async ({ params }: ProductDetailsPageProps) => {
           />
         </div>
 
-        {/* Product Details */}
         <div className="flex-1 flex flex-col">
           <div className="flex justify-between items-start gap-5 flex-wrap pb-6">
             <div className="flex flex-col gap-3">
@@ -81,7 +80,6 @@ const ProductDetails = async ({ params }: ProductDetailsPageProps) => {
             </div>
           </div>
 
-          {/* Price Info */}
           <div className="product-info">
             <div className="flex flex-col gap-2">
               <p className="text-[34px] text-secondary font-bold">
@@ -126,7 +124,6 @@ const ProductDetails = async ({ params }: ProductDetailsPageProps) => {
             </div>
           </div>
 
-          {/* Price Stats */}
           <div className="my-7 flex flex-col gap-5">
             <div className="flex gap-5 flex-wrap">
               <PriceInfoCard
@@ -156,11 +153,10 @@ const ProductDetails = async ({ params }: ProductDetailsPageProps) => {
             </div>
           </div>
 
-          <Modal productId={id} />
+          <Modal productId={params.id} />
         </div>
       </div>
 
-      {/* Description */}
       <div className="flex flex-col gap-16">
         <div className="flex flex-col gap-5">
           <h3 className="text-2xl text-secondary font-semibold">
@@ -184,7 +180,6 @@ const ProductDetails = async ({ params }: ProductDetailsPageProps) => {
         </button>
       </div>
 
-      {/* Similar Products */}
       {similarProducts && similarProducts.length > 0 && (
         <div className="py-14 flex flex-col gap-2 w-full">
           <p className="section-text">Similar Products</p>
@@ -197,6 +192,4 @@ const ProductDetails = async ({ params }: ProductDetailsPageProps) => {
       )}
     </div>
   );
-};
-
-export default ProductDetails;
+}
